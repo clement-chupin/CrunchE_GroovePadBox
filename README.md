@@ -1,5 +1,20 @@
 Find Schematics at http://toggleboss.com, this is the Arduno Sketch "OS"
 
+## Fork Note (Groove Pad Box)
+
+This repository is a forked adaptation of Crunch-E for the Groove Pad Box hardware used in MothOS.
+The original Crunch-E project targets a simpler keypad/LED wiring, while this fork targets:
+
+- ESP32 + MCP23X17 button expanders
+- SH1107 128x128 OLED display
+- I2S audio output
+- NeoPixel feedback strip
+- Optional potentiometer controls
+
+Goal of this fork: keep the Crunch-E workflow and sound design while making it run on the same hardware platform as MothOS.
+
+![CrunchE fork example](example.jpeg)
+
 Crunch-E is a keychain form factor music-making platform that is both limited and limitless. The current software supports 4 tracks, 10 synth instruments, and 2 drum machine banks, but who knows where developers will take the open-source software next?
 
 **DIY Build Parts:**

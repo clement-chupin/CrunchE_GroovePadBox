@@ -6,6 +6,10 @@ public:
   int arpNum;
   int delay;
   int octave;
+  int reverbAmount;
+  int voiceNum;
+  float volume;
+  
   Voice();
   int UpdateVoice();
 
@@ -16,6 +20,7 @@ public:
   void SetEnvelopeNum(int val);
   void SetEnvelopeLength(int val);
   void SetArpNum(int val);
+  void SetReverbAmount(int val);
 
 private:
   int effect;
@@ -26,7 +31,6 @@ private:
   int envelopeLength;
   int envelope;
   int envelopeNum;
-  int voiceNum;
   int output;
   int note;
   int sampleHistory[2000];
@@ -35,7 +39,6 @@ private:
   float baseFreq;
   float sampleIndex;
   float sampleIndexNext;
-  float volume;
   
   int ReadWaveform();
   int ReadDrumWaveform();

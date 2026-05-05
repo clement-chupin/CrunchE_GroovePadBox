@@ -46,6 +46,7 @@ Voice::Voice() {
   envelopeLength = 60000;
   volume = 1;
   voiceNum = 0;
+  reverbAmount = 0;
   SetupArps();
 }
 
@@ -414,6 +415,10 @@ void Voice::SetEnvelopeLength(int val) {
 
 void Voice::SetArpNum(int val) {
   arpNum = val;
+}
+
+void Voice::SetReverbAmount(int val) {
+  reverbAmount = constrain(val, 0, 3);
 }
 
 void Voice::SetupArps() {

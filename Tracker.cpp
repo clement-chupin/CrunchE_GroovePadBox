@@ -5,6 +5,7 @@
 Tracker::Tracker() {
   patternLength = 32;
   isPlaying = true;
+  masterGainQ8 = 256;
   bpms[0] = 120;
   bpms[1] = 132;
   bpms[2] = 145;
@@ -91,6 +92,9 @@ int Tracker::UpdateTracker() {
     masterSample += voices[i].UpdateVoice();
   }
 
+  // Apply master gain
+  masterSample = (masterSample * masterGainQ8) >> 8;
+  
   return masterSample;
 }
 
@@ -272,3 +276,26 @@ void Tracker::ClearAll(int val) {
   }
   patternLength = 32 + (32 * val);
 };
+
+void Tracker::ApplyPotControls(int potVolume, int potReverb, int potDelay, int potPhaser) {
+  // Volume control (0-4095 -> 0-256)
+  masterGainQ8 = constrain((potVolume >> 4) & 0xFF, 0, 255);
+  
+  // Reverb control (0-4095 -> 0-3)
+  int reverbVal = (potReverb >> 10) & 0x3;
+  
+  // Delay control (0-4095 -> 0-3) 
+  int delayVal = (potDelay >> 10) & 0x3;
+  
+  // Phaser control (0-4095 -> 0-3)
+  int phaserVal = (potPhaser >> 10) & 0x3;
+  
+  // Apply to selected voice
+  if (selectedTrack >= 0 && selectedTrack < 4) {
+    // Map reverb/delay/phaser to voice parameters as needed
+    // For now, keep as is - can be extended for actual effect control
+    voices[selectedTrack].SetReverbAmount(reverbVal);
+    // voices[selectedTrack].SetDelayAmount(delayVal);
+    // voices[selectedTrack].SetPhaserAmount(phaserVal);
+  }
+}

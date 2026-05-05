@@ -10,21 +10,24 @@ public:
   int selectedTrack;
   bool allPatternPlay;
   int currentPattern;
+  int masterGainQ8;
+  float bpm;
+  int patternLength;
+  Voice voices[4];
+  
   Tracker();
   int UpdateTracker();
   void SetCommand(char command, int val);
+  void ApplyPotControls(int potVolume, int potReverb, int potDelay, int potPhaser);
  
 private:
-  float bpm;
   float bps;
   float beatTime;
   float noteTime;
   int barCount;
   int trackIndex;
   float lastMillis;
-  int patternLength;
   
-  Voice voices[4];
   float soundVelocity;
   int currentVoice=0;
 

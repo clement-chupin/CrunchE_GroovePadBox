@@ -100,6 +100,34 @@ int Voice::UpdateVoice() {
 
 //look up how to refactor this in c++, use a list or dict not a switch
 int Voice::ReadWaveform() {
+  // INS11 is a dedicated one-shot sample instrument (sfx6).
+  // - Retriggered from start on each note-on (handled in SetNote)
+  // - Plays at fixed slower speed to lower pitch
+  // - No loop wrap: stop at end of sample
+  if (voiceNum == 11) {
+    // Keep note-dependent pitch (baseFreq) but globally downshift it.
+    float playbackRate = baseFreq * 0.55f;
+    if (playbackRate < 0.08f) playbackRate = 0.08f;
+    if (playbackRate > 2.50f) playbackRate = 2.50f;
+    int idx = (int)sampleIndex;
+    int sample = 0;
+
+    if (idx >= 0 && idx < sfx6Length) {
+      sample = sfx6[idx];
+      sampleIndex += playbackRate;
+    } else {
+      sample = 0;
+      sampleIndex = (float)sfx6Length;
+    }
+
+    // Keep level stable for full one-shot playback.
+    sample = (int)(sample * volume);
+    if (isDelay) {
+      sample *= .3;
+    }
+    return sample;
+  }
+
   int sampleLen = 0;
   int sample = 0;
   int sampleNext = 0;
@@ -148,8 +176,8 @@ int Voice::ReadWaveform() {
       sample = jlead1[(int)sampleIndex]*0.8;
       break;
     case 11:
-      sampleLen = jlead2Length;
-      sample = jlead2[(int)sampleIndex];
+      sampleLen = sfx6Length;
+      sample = sfx6[(int)sampleIndex];
       break;
   }
 
@@ -377,6 +405,12 @@ float Voice::GetVolumeRatio() {
 void Voice::SetNote(int val, bool delay, int optOctave, int optInstrument) {
   if (voiceNum < 2)
     sampleIndex = 0;
+
+  // Dedicated retrigger behavior for INS11 (sfx6 one-shot):
+  // always restart from the beginning on note-on.
+  if (optInstrument == 11) {
+    sampleIndex = 0;
+  }
 
   note = val;
   envelope = envelopeLength;

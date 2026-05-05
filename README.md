@@ -15,6 +15,14 @@ Goal of this fork: keep the Crunch-E workflow and sound design while making it r
 
 ![CrunchE fork example](example.jpeg)
 
+## Hardware Photos
+
+The initial Crunch-E project did not include an onboard screen.
+This fork adds an OLED interface for menu visibility and live status feedback.
+
+![Full device](global.jpeg)
+![Refactored menu on OLED](menu.jpeg)
+
 Crunch-E is a keychain form factor music-making platform that is both limited and limitless. The current software supports 4 tracks, 10 synth instruments, and 2 drum machine banks, but who knows where developers will take the open-source software next?
 
 **DIY Build Parts:**

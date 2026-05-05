@@ -129,27 +129,27 @@ bool ScreenManager::DrawMenuScreen(U8G2 &screen, int activeFunction) {
 
   static const char* menuF1[16] = {
     "OCT0", "OCT1", "OCT2", "OCT3",
-    "INS0", "INS1", "INS2", "INS3",
+    "INS8", "INS9", "INS10", "SFX6",
     "INS4", "INS5", "INS6", "INS7",
-    "INS8", "INS9", "INS10", "INS11"
+    "INS0", "INS1", "INS2", "INS3"
   };
   static const char* menuF2[16] = {
     "VOL0", "VOL1", "VOL2", "VOL3",
-    "ARP0", "ARP1", "ARP2", "ARP3",
+    "ENV0", "ENV1", "ENV2", "ENV3",
     "DLY0", "DLY1", "DLY2", "DLY3",
-    "ENV0", "ENV1", "ENV2", "ENV3"
+    "ARP0", "ARP1", "ARP2", "ARP3"
   };
   static const char* menuF3[16] = {
     "TRK1", "TRK2", "TRK3", "TRK4",
-    "CLP1", "CLP2", "CLP3", "CLP4",
+    "CLT1", "CLT2", "CLT3", "CLT4",
     "PAT1", "PAT2", "PAT3", "PAT4",
-    "CLT1", "CLT2", "CLT3", "CLT4"
+    "CLP1", "CLP2", "CLP3", "CLP4"
   };
   static const char* menuF4[16] = {
-    "LEN32", "LEN64", "LINE", "PALL",
-    "CPAT", "PPAT", "OPT2", "OPT3",
+    "LEN1", "LEN2", "LEN3", "STOP",
     "BPM1", "BPM2", "BPM3", "BPM4",
-    "LEN1", "LEN2", "LEN3", "STOP"
+    "CPAT", "PPAT", "OPT2", "OPT3",
+    "LEN32", "LEN64", "LINE", "PALL"
   };
 
   const char** labels = menuF1;

@@ -277,7 +277,7 @@ void Tracker::ClearAll(int val) {
   patternLength = 32 + (32 * val);
 };
 
-void Tracker::ApplyPotControls(int potVolume, int potReverb, int potDelay, int potPhaser) {
+void Tracker::ApplyPotControls(int potVolume, int potReverb, int potDelay, int potPhaser, int potOctave) {
   // Volume control (0-4095 -> 0-256)
   masterGainQ8 = constrain((potVolume >> 4) & 0xFF, 0, 255);
   
@@ -289,13 +289,28 @@ void Tracker::ApplyPotControls(int potVolume, int potReverb, int potDelay, int p
   
   // Phaser control (0-4095 -> 0-3)
   int phaserVal = (potPhaser >> 10) & 0x3;
+
+  // Octave control (0-4095 -> 0-3)
+  int octaveVal = (potOctave >> 10) & 0x3;
   
   // Apply to selected voice
   if (selectedTrack >= 0 && selectedTrack < 4) {
     // Map reverb/delay/phaser to voice parameters as needed
-    // For now, keep as is - can be extended for actual effect control
     voices[selectedTrack].SetReverbAmount(reverbVal);
-    // voices[selectedTrack].SetDelayAmount(delayVal);
-    // voices[selectedTrack].SetPhaserAmount(phaserVal);
+    voices[selectedTrack].SetOctave(octaveVal);
+    (void)phaserVal;
+    (void)delayVal;
   }
+}
+
+int Tracker::GetStepInPattern() const {
+  int start = patternLength * currentPattern;
+  int rel = trackIndex - start;
+  if (rel < 0) rel = 0;
+  if (rel >= patternLength) rel = patternLength - 1;
+  return rel;
+}
+
+int Tracker::GetCurrentVoice() const {
+  return currentVoice;
 }

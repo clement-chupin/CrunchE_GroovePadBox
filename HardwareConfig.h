@@ -52,6 +52,7 @@ constexpr int POT_PIN_VOLUME = 34;   // master volume
 constexpr int POT_PIN_REVERB = 35;   // reverb amount (selected track)
 constexpr int POT_PIN_DELAY  = 32;   // delay amount (selected track)
 constexpr int POT_PIN_PHASER = 33;   // phaser amount (selected track)
+constexpr int POT_PIN_OCTAVE = 2;    // octave control (selected track)
 
 constexpr uint8_t POT_ALPHA_SHIFT = 3;
 constexpr int POT_DEADZONE = 12;

@@ -8,16 +8,15 @@ class Tracker;
 class ScreenManager {
 public:
   ScreenManager();
-  void Update(Tracker &tracker, U8G2 &screen, int potVolumeApplied, int potReverbApplied);
+  void Update(Tracker &tracker, U8G2 &screen, int activeFunction, const int potValues[5]);
   
 private:
-  uint32_t lastPotDisplayMs;
-  uint32_t potFeedbackUntilMs;
-  int potFeedbackValue;
-  int potFeedbackTrack;
+  int lastPotValues[5];
+  int potPopupIndex;
+  int potPopupValue;
+  uint32_t potPopupUntilMs;
   
-  void UpdateMainScreen(Tracker &tracker, U8G2 &screen);
-  void DrawPatternGrid(Tracker &tracker, U8G2 &screen);
-  void DrawTrackInfo(Tracker &tracker, U8G2 &screen);
-  void DrawPotFeedback(U8G2 &screen, int value, int track);
+  void UpdateMainScreen(Tracker &tracker, U8G2 &screen, const int potValues[5]);
+  bool DrawMenuScreen(U8G2 &screen, int activeFunction);
+  void DrawPotFeedback(U8G2 &screen);
 };

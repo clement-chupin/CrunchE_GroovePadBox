@@ -2,6 +2,8 @@
 #include "InputManager.h"
 
 InputManager::InputManager() {
+  activeFunction = -1;
+  ClearFunctions();
 }
 
 void InputManager::UpdateInput(char rawInput) {
@@ -69,6 +71,7 @@ void InputManager::UpdateInput(char rawInput) {
 void InputManager::ClearFunctions() {
   for (int i = 0; i < 4; i++)
     fnc[i] = false;
+  activeFunction = -1;
 }
 
 void InputManager::ProcessClick(int input) {
@@ -181,6 +184,7 @@ void InputManager::ProcessFunctionClick(int input) {
   //enable function
   if (fnc[input] == false) {
     fnc[input] = true;
+    activeFunction = input;
     switch (input) {
       case 0:
         ledCommand = 'A';

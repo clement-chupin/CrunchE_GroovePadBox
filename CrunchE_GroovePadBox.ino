@@ -79,9 +79,7 @@ static uint32_t g_lastLedRenderMs = 0;
 static uint32_t g_lastPotUpdateMs = 0;
 static uint32_t g_lastAudioUs = 0;
 
-// CrunchE uses a 4x4 logical keypad. Pick one 4-column bank from the 8-column hardware grid.
-// 0 = left bank (cols 0..3), 4 = right bank (cols 4..7).
-static constexpr uint8_t CRUNCHE_COL_OFFSET = 0;
+// CrunchE uses a 4x4 logical keypad mirrored across the full 8-column keyboard (ABCD ABCD).
 // Optional +2 buttons on mcpExtra pins (B1/B2). Kept disabled by default.
 static constexpr bool USE_B1_B2_EXTRA = false;
 
@@ -101,19 +99,20 @@ int volumeBars[4] = {0, 0, 0, 0};
 String noteChars[12];
 
 // Potentiometer control variables (always available for display)
-int potSmoothed[4] = {0, 0, 0, 0};
-int potApplied[4] = {0, 0, 0, 0};
-int potLastFeedback[4] = {0, 0, 0, 0};
+int potSmoothed[5] = {0, 0, 0, 0, 0};
+int potApplied[5] = {0, 0, 0, 0, 0};
+int potLastFeedback[5] = {0, 0, 0, 0, 0};
 
 #if USE_POTENTIOMETERS
-const int kPotCount = 4;
+const int kPotCount = 5;
 const int kPotPins[kPotCount] = {
   POT_PIN_VOLUME,
   POT_PIN_REVERB,
   POT_PIN_DELAY,
-  POT_PIN_PHASER
+  POT_PIN_PHASER,
+  POT_PIN_OCTAVE
 };
-const char* potEffectNames[kPotCount] = {"VOL", "REVERB", "DELAY", "PHASER"};
+const char* potEffectNames[kPotCount] = {"VOL", "REVERB", "DELAY", "PHASER", "OCTAVE"};
 #endif
 
 void Task2Loop(void* parameter);
@@ -201,7 +200,7 @@ void loop() {
   if (millis() - g_lastPotUpdateMs >= 8) {
     g_lastPotUpdateMs = millis();
     updatePotentiometers();
-    tracker.ApplyPotControls(potApplied[0], potApplied[1], potApplied[2], potApplied[3]);
+    tracker.ApplyPotControls(potApplied[0], potApplied[1], potApplied[2], potApplied[3], potApplied[4]);
   }
 #endif
 
@@ -287,10 +286,8 @@ void Task2Loop(void* parameter) {
       delay(100);
       continue;
     }
-    
-    int potVol = potApplied[0];
-    int potReverb = potApplied[1];
-    screenManager.Update(tracker, *screen, potVol, potReverb);
+
+    screenManager.Update(tracker, *screen, inputManager.activeFunction, potApplied);
     
     delay(40);
   }
@@ -364,13 +361,13 @@ static char readMappedCrunchEKey() {
 
   uint16_t logicalMask = 0;
   for (int row = 0; row < KEY_ROWS; row++) {
-    for (int col = 0; col < KEY_COLS; col++) {
-      int physCol = CRUNCHE_COL_OFFSET + col;
-      int physPos = row * COLS + physCol;
+    for (int col = 0; col < COLS; col++) {
+      int physPos = row * COLS + col;
       if ((rising >> physPos) & 0x1U) {
-        // Keep original CrunchE orientation (top row = M..P).
+        // Full keyboard mapping: ABCD ABCD across each row.
+        int effCol = col % KEY_COLS;
         int mapRow = (KEY_ROWS - 1 - row);
-        int keyIndex = mapRow * KEY_COLS + col;
+        int keyIndex = mapRow * KEY_COLS + effCol;
         if (keyIndex >= 0 && keyIndex < 16) {
           logicalMask |= (uint16_t)(1U << keyIndex);
         }
@@ -413,16 +410,16 @@ static int getButtonLedIndexSerpentine(int row, int col) {
 static void renderButtonLeds() {
   strip.clear();
 
-  // Only light the active 4x4 CrunchE bank.
+  // Light the entire keyboard with ABCD ABCD mirrored mapping.
   for (int row = 0; row < KEY_ROWS; row++) {
-    for (int col = 0; col < KEY_COLS; col++) {
-      int physCol = CRUNCHE_COL_OFFSET + col;
-      int physPos = row * COLS + physCol;
+    for (int col = 0; col < COLS; col++) {
+      int physPos = row * COLS + col;
       if (!((g_mainButtonMask >> physPos) & 0x1U)) continue;
 
+      int effCol = col % KEY_COLS;
       int mapRow = (KEY_ROWS - 1 - row);
-      int keyIndex = mapRow * KEY_COLS + col;
-      int ledFirst = getButtonLedIndexSerpentine(row, physCol);
+      int keyIndex = mapRow * KEY_COLS + effCol;
+      int ledFirst = getButtonLedIndexSerpentine(row, col);
       if (ledFirst >= LED_COUNT) continue;
 
       uint32_t color = (keyIndex < 4) ? trackColor(keyIndex) : noteColor((uint8_t)(keyIndex - 4));

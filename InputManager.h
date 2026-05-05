@@ -7,6 +7,7 @@ public:
   char trackCommand;
   int trackCommandArgument;
   char ledCommand;
+  int activeFunction;
   InputManager();
   void UpdateInput(char rawInput);
   void ProcessFunctionClick(int input);

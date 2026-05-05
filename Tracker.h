@@ -18,7 +18,9 @@ public:
   Tracker();
   int UpdateTracker();
   void SetCommand(char command, int val);
-  void ApplyPotControls(int potVolume, int potReverb, int potDelay, int potPhaser);
+  void ApplyPotControls(int potVolume, int potReverb, int potDelay, int potPhaser, int potOctave);
+  int GetStepInPattern() const;
+  int GetCurrentVoice() const;
  
 private:
   float bps;

@@ -2,7 +2,7 @@ Find Schematics at http://toggleboss.com, this is the Arduno Sketch "OS"
 
 ## Fork Note (Groove Pad Box)
 
-This repository is a forked adaptation of Crunch-E for the Groove Pad Box hardware used in MothOS.
+This repository is a forked adaptation of Crunch-E for the Groove Pad Box hardware platform (clavier_v2).
 The original Crunch-E project targets a simpler keypad/LED wiring, while this fork targets:
 
 - ESP32 + MCP23X17 button expanders
@@ -11,7 +11,7 @@ The original Crunch-E project targets a simpler keypad/LED wiring, while this fo
 - NeoPixel feedback strip
 - Optional potentiometer controls
 
-Goal of this fork: keep the Crunch-E workflow and sound design while making it run on the same hardware platform as MothOS.
+Goal of this fork: keep the Crunch-E workflow and sound design while making it run on the Groove Pad Box (clavier_v2) hardware.
 
 ![CrunchE fork example](example.jpeg)
 
